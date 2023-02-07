@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        app:showAsAction="always"
+        android:icon="@drawable/ic_more_vert"
+        android:title="">
+        <menu>
+            <item
+                android:id="@+id/profile"
+                android:icon="@drawable/ic_perfil"
+                android:title="Profile"
+                app:showAsAction="never"/>
+            <item
+                android:id="@+id/contactos"
+                android:icon="@drawable/ic_baseline_contact_support"
+                android:title="Contactos"
+                app:showAsAction="never"/>
+            <item
+                android:id="@+id/setting"
+                android:icon="@drawable/ic_baseline_settings"
+                android:title="Setting"
+                app:showAsAction="never"/>
+            <item
+                android:id="@+id/exit"
+                android:icon="@drawable/ic_baseline_exit"
+                android:title="Exit"
+                app:showAsAction="never"/>
+        </menu>
+    </item>
+</menu>

@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".CategoryProduct">
+
+    <TextView
+        android:id="@+id/slogan_category"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="27dp"
+        android:text="Add New Product"
+        android:textAlignment="center"
+        android:textSize="26sp"
+        android:textStyle="bold" />
+
+    <LinearLayout
+        android:id="@+id/linear_category_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/slogan_category"
+        android:orientation="horizontal"
+        android:layout_centerHorizontal="true"
+        android:gravity="center"
+        android:layout_marginTop="45dp">
+
+        <ImageView
+            android:id="@+id/ropa_hombre"
+            android:layout_width="100dp"
+            android:layout_height="80dp"
+            android:src="@drawable/camisa1" />
+
+        <ImageView
+            android:id="@+id/ropa_mujer"
+            android:layout_width="100dp"
+            android:layout_height="80dp"
+            android:src="@drawable/mujer" />
+        <ImageView
+            android:id="@+id/ropa_deporte"
+            android:layout_width="100dp"
+            android:layout_height="80dp"
+            android:src="@drawable/camiseta5" />
+        <ImageView
+            android:id="@+id/sapatillas"
+            android:layout_width="100dp"
+            android:layout_height="80dp"
+            android:src="@drawable/sapatilla" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/linear2_category_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/linear_category_layout"
+        android:orientation="horizontal"
+        android:layout_centerHorizontal="true"
+        android:gravity="center"
+        android:layout_marginTop="45dp">
+
+        <ImageView
+            android:id="@+id/disfraces"
+            android:layout_width="100dp"
+            android:layout_height="80dp"
+            android:src="@drawable/dizfraz" />
+
+        <ImageView
+            android:id="@+id/bufanda"
+            android:layout_width="100dp"
+            android:layout_height="80dp"
+            android:src="@drawable/bufanda" />
+        <ImageView
+            android:id="@+id/sombreros"
+            android:layout_width="100dp"
+            android:layout_height="80dp"
+            android:src="@drawable/hat" />
+        <ImageView
+            android:id="@+id/gafas"
+            android:layout_width="100dp"
+            android:layout_height="80dp"
+            android:src="@drawable/glasses" />
+
+    </LinearLayout>
+
+
+</RelativeLayout>

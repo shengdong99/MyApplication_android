@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "221461318144",
+    "firebase_url": "https://haitian-8c20f-default-rtdb.firebaseio.com",
+    "project_id": "haitian-8c20f",
+    "storage_bucket": "haitian-8c20f.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:221461318144:android:4fd23420ef6ec559fce6e5",
+        "android_client_info": {
+          "package_name": "com.shengdong"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "221461318144-fn1njoju295mt2k3t705s62hvparegic.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDroAaFnV9BST1IY9biPh9Llx-wc0d0UOU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "221461318144-fn1njoju295mt2k3t705s62hvparegic.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
