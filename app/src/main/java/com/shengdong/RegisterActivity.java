@@ -76,16 +76,10 @@ public class RegisterActivity extends AppCompatActivity {
         @Override
         public void onTextChanged(CharSequence s, int start, int before, int count) {
 
-            database = FirebaseDatabase.getInstance();
-            reference = database.getReference("user");
-
             String emailInput = email.getText().toString().trim();
             String passwordInput = password.getText().toString().trim();
             String passwordConfirmInput = passwordConfirm.getText().toString().trim();
             String nameInput = name.getText().toString().trim();
-
-            HelperClass helperClass = new HelperClass(nameInput, emailInput, passwordInput);
-            reference.child(nameInput).setValue(helperClass);
 
 
             btn_registrar2.setEnabled(!nameInput.isEmpty() && !emailInput.isEmpty() && !passwordInput.isEmpty() && !passwordConfirmInput.isEmpty());
@@ -102,9 +96,9 @@ public class RegisterActivity extends AppCompatActivity {
         // Check if user is signed in (non-null) and update UI accordingly.
         FirebaseUser currentUser = mAuth.getCurrentUser();
         //updateUI(currentUser);
+
+
     }
-
-
 
    public void registrarUsuario(View view){
 
@@ -123,13 +117,28 @@ public class RegisterActivity extends AppCompatActivity {
                             map.put("password", password);
 
 
+
+
                             if (task.isSuccessful()) {
+
+                                database = FirebaseDatabase.getInstance();
+                                reference = database.getReference("users");
+
+                                String nameInput = name.getText().toString();
+                                String emailInput = email.getText().toString();
+                                String passwordInput = password.getText().toString();
+
+                                HelperClass helperClass = new HelperClass(nameInput, emailInput, passwordInput);
+                                reference.child(nameInput).setValue(helperClass);
+
                                 // Sign in success, update UI with the signed-in user's information
                                 Toast.makeText(getApplicationContext(), "Usuario creado", Toast.LENGTH_SHORT).show();
                                 FirebaseUser user = mAuth.getCurrentUser();
                                 Intent i = new Intent(getApplicationContext(), LoginActivity.class);
                                 startActivity(i);
                                 //updateUI(user);
+
+
                             } else {
                                 // If sign in fails, display a message to the user.
                                 Toast.makeText(getApplicationContext(), "Authentication failed.",
