@@ -6,6 +6,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -23,6 +24,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.shengdong.recyclerviewtest.utils.adapter.RopaItemAdapter;
 import com.shengdong.recyclerviewtest.utils.model.ShoeCart;
 import com.shengdong.recyclerviewtest.utils.model.ShoeItem;
@@ -34,6 +36,7 @@ import java.util.List;
 public class HomeActivity extends AppCompatActivity implements RopaItemAdapter.ShoeClickedListeners {
 
     private FirebaseAuth mAuth;
+    private FirebaseUser currentUser;
     private RopaItemAdapter adapter;
     private List<ShoeItem> shoeItemList;
     private List<ShoeCart> shoeCartList;
@@ -66,6 +69,7 @@ public class HomeActivity extends AppCompatActivity implements RopaItemAdapter.S
         drawerLayout.addDrawerListener(drawerToggle);
         drawerToggle.syncState();
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
@@ -119,9 +123,12 @@ public class HomeActivity extends AppCompatActivity implements RopaItemAdapter.S
         setUpList();
 
         mAuth = FirebaseAuth.getInstance();
+        currentUser = mAuth.getCurrentUser();
 
         adapter.setShoeItemList(shoeItemList);
         recyclerView.setAdapter(adapter);
+
+        updateNavHeader();
 
        /* cartImageView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -131,6 +138,19 @@ public class HomeActivity extends AppCompatActivity implements RopaItemAdapter.S
         });*/
     }
 
+    public void updateNavHeader(){
+        navigationView = findViewById(R.id.nav_view);
+        View headerView = navigationView.getHeaderView(0);
+        TextView navEmail = headerView.findViewById(R.id.nav_email);
+        TextView navUsername = headerView.findViewById(R.id.nav_username);
+
+
+        navEmail.setText(currentUser.getEmail());
+        navUsername.setText(currentUser.getDisplayName());
+
+
+
+    }
     @Override
     protected void onResume() {
         super.onResume();
