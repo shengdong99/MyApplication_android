@@ -95,7 +95,7 @@ public class LoginActivity extends AppCompatActivity {
 
                            Toast.makeText(getApplicationContext(), "Authentication correcta.",
                                     Toast.LENGTH_SHORT).show();
-                            Intent i = new Intent(getApplicationContext(), HomeActivity.class);
+                            Intent i = new Intent(getApplicationContext(), MainActivity2.class);
                             startActivity(i);
 
 

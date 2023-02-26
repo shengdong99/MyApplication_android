@@ -97,7 +97,7 @@ public class HomeActivity extends AppCompatActivity implements ProductItemAdapte
                 {
                     case R.id.nav_home:
                     {
-                        intent = new Intent(HomeActivity.this, HomeActivity.class);
+                        intent = new Intent(HomeActivity.this, MainActivity2.class);
                         startActivity(intent);
                         Toast.makeText(HomeActivity.this, "Home Selected", Toast.LENGTH_SHORT).show();
                         break;
