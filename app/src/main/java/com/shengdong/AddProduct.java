@@ -1,6 +1,5 @@
 package com.shengdong;
 
-import android.app.Dialog;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -13,7 +12,6 @@ import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContract;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -28,9 +26,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
-import com.google.firebase.storage.StorageRegistrar;
 import com.google.firebase.storage.UploadTask;
-import com.shengdong.databinding.ActivityAddProductBinding;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -43,7 +39,7 @@ public class AddProduct extends AppCompatActivity {
     private EditText InputProductName, InputProductDescription, InputProductPrice;
     private static final int GalleryPick=1;
     private Uri ImageUri;
-    private String productRamdonKey, downloadImageUri;
+    private String productRamdonKey, downloadImageUrl;
     private StorageReference ProductImagesRef;
     private DatabaseReference ProductsRef;
     ActivityResultLauncher<String> mTakePhoto;
@@ -93,8 +89,8 @@ public class AddProduct extends AppCompatActivity {
 
     private void ValidateProductData() {
         Description = InputProductDescription.getText().toString();
-        Price = InputProductDescription.getText().toString();
-        Pname = InputProductDescription.getText().toString();
+        Price = InputProductPrice.getText().toString();
+        Pname = InputProductName.getText().toString();
 
         if(ImageUri == null){
             Toast.makeText(this, "Product image is Mandadory", Toast.LENGTH_SHORT).show();
@@ -145,14 +141,14 @@ public class AddProduct extends AppCompatActivity {
                         if(!task.isSuccessful()){
                             throw task.getException();
                         }
-                        downloadImageUri = filePath.getDownloadUrl().toString();
+                        downloadImageUrl = filePath.getDownloadUrl().toString();
                         return filePath.getDownloadUrl();
                     }
                 }).addOnCompleteListener(new OnCompleteListener<Uri>() {
                     @Override
                     public void onComplete(@NonNull Task<Uri> task) {
                         if(task.isSuccessful()){
-                            downloadImageUri = task.getResult().toString();
+                            downloadImageUrl = task.getResult().toString();
                             Toast.makeText(AddProduct.this, "get Product Image Url database Succesfully...", Toast.LENGTH_SHORT).show();
                             saveProductInforToDatabse();
                         }
@@ -167,10 +163,11 @@ public class AddProduct extends AppCompatActivity {
         productMap.put("pid", productRamdonKey);
         productMap.put("date", saveCurrentDate);
         productMap.put("time", saveCurrentTime);
-        productMap.put("description", Description);
+        productMap.put("shoeBrandName", Description);
+        productMap.put("image", downloadImageUrl);
         productMap.put("category", CategoryName);
-        productMap.put("price", Price);
-        productMap.put("pname", Pname);
+        productMap.put("shoePrice", Price);
+        productMap.put("shoeName", Pname);
 
         ProductsRef.child(productRamdonKey).updateChildren(productMap)
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
@@ -206,18 +203,5 @@ public class AddProduct extends AppCompatActivity {
         }
     }
 
-    /*private void OpenGalllery() {
-        Intent galleryIntent = new Intent();
-        galleryIntent.setAction(Intent.ACTION_GET_CONTENT);
-        galleryIntent.setType("image/*");
-        startActivityForResult(galleryIntent, GalleryPick);
-    }
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode==GalleryPick && resultCode==RESULT_OK && data!=null){
-            ImageUri = data.getData();
-            InputProductImage.setImageURI(ImageUri);
-        }
-    }*/
+
 }

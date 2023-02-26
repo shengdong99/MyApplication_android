@@ -5,11 +5,15 @@ import android.os.Parcelable;
 
 public class ShoeItem implements Parcelable {
 
-    private String shoeName, shoeBrandName;
+    private String key, shoeName, shoeBrandName, category, pid, date, time, image;
     private int shoeImage;
     private double shoePrice;
 
-    public ShoeItem(String shoeName, String shoeBrandName, int shoeImage, double shoePrice) {
+    public ShoeItem() {
+    }
+
+    public ShoeItem(String shoeName, String shoeBrandName, int shoeImage, double shoePrice, String image) {
+        this.image = image;
         this.shoeName = shoeName;
         this.shoeBrandName = shoeBrandName;
         this.shoeImage = shoeImage;
@@ -17,6 +21,7 @@ public class ShoeItem implements Parcelable {
     }
 
     protected ShoeItem(Parcel in) {
+
         shoeName = in.readString();
         shoeBrandName = in.readString();
         shoeImage = in.readInt();
@@ -34,6 +39,57 @@ public class ShoeItem implements Parcelable {
             return new ShoeItem[size];
         }
     };
+
+
+
+    public String getKey() {
+        return key;
+    }
+
+    public void setKey(String key) {
+        this.key = key;
+    }
+
+    public String getCategory() {
+        return category;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
+    }
+
+    public String getPid() {
+        return pid;
+    }
+
+    public void setPid(String pid) {
+        this.pid = pid;
+    }
+
+    public String getDate() {
+        return date;
+    }
+
+    public void setDate(String date) {
+        this.date = date;
+    }
+
+    public String getTime() {
+        return time;
+    }
+
+    public void setTime(String time) {
+        this.time = time;
+    }
+
+    public String getImage() {
+        return image;
+    }
+
+
+    public void setImage(String image) {
+        this.image = image;
+    }
 
     public String getShoeName() {
         return shoeName;

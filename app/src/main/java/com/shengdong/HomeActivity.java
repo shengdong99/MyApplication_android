@@ -6,8 +6,10 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
@@ -25,7 +27,15 @@ import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.shengdong.recyclerviewtest.utils.adapter.RopaItemAdapter;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.shengdong.recyclerviewtest.Interface.CartLoadListener;
+import com.shengdong.recyclerviewtest.Interface.ProductLoadListener;
+import com.shengdong.recyclerviewtest.utils.adapter.ProductItemAdapter;
 import com.shengdong.recyclerviewtest.utils.model.ShoeCart;
 import com.shengdong.recyclerviewtest.utils.model.ShoeItem;
 import com.shengdong.recyclerviewtest.viewmodel.CartViewModel;
@@ -33,23 +43,31 @@ import com.shengdong.recyclerviewtest.viewmodel.CartViewModel;
 import java.util.ArrayList;
 import java.util.List;
 
-public class HomeActivity extends AppCompatActivity implements RopaItemAdapter.ShoeClickedListeners {
+public class HomeActivity extends AppCompatActivity implements ProductItemAdapter.ShoeClickedListeners, ProductLoadListener {
 
     private FirebaseAuth mAuth;
     private FirebaseUser currentUser;
-    private RopaItemAdapter adapter;
+    private ProductItemAdapter adapter;
     private List<ShoeItem> shoeItemList;
     private List<ShoeCart> shoeCartList;
     private CartViewModel viewModel;
     private CoordinatorLayout coordinatorLayout;
     //private ImageView cartImageView;
+
+    ImageView Image, shoeImageView;
     DrawerLayout drawerLayout;
     NavigationView navigationView;
     ActionBarDrawerToggle drawerToggle;
     //ListView listView;
+
     RecyclerView recyclerView;
 
+    StorageReference storageReference;
 
+
+
+    CartLoadListener cartLoadListener;
+    ProductLoadListener productLoadListener;
 
 
     @Override
@@ -61,6 +79,7 @@ public class HomeActivity extends AppCompatActivity implements RopaItemAdapter.S
         tb.setTitle("Home");
         tb.setLogo(R.drawable.ic_baseline_home);
         setSupportActionBar(tb);
+
 
 
         drawerLayout = findViewById(R.id.drawer_layout);
@@ -120,15 +139,17 @@ public class HomeActivity extends AppCompatActivity implements RopaItemAdapter.S
         });
 
         initializeVariables();
-        setUpList();
+        //setUpList();
 
         mAuth = FirebaseAuth.getInstance();
         currentUser = mAuth.getCurrentUser();
+        storageReference = FirebaseStorage.getInstance().getReference();
+
 
         adapter.setShoeItemList(shoeItemList);
         recyclerView.setAdapter(adapter);
 
-        updateNavHeader();
+
 
        /* cartImageView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -136,7 +157,81 @@ public class HomeActivity extends AppCompatActivity implements RopaItemAdapter.S
                 startActivity(new Intent(HomeActivity.this, CartActivity.class));
             }
         });*/
+
+        //init();
+       // loadImagesDynamically();
+       loadProductFromDatabase();
+       updateNavHeader();
+
     }
+
+
+    private void loadProductFromDatabase() {
+        List<ShoeItem> productModels = new ArrayList<>();
+        FirebaseDatabase.getInstance()
+                .getReference("Products")
+                .addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+
+                        if(snapshot.exists()){
+                            for(DataSnapshot productSnapshot:snapshot.getChildren()){
+                                ShoeItem productModel = productSnapshot.getValue(ShoeItem.class);
+                                productModel.setKey(productSnapshot.getKey());
+
+                                productModels.add(productModel);
+
+
+                            }
+                            productLoadListener.onProductLoadSuccess(productModels);
+
+                        }
+                        else
+                            productLoadListener.onProductLoadFailed("Cant Find Products");
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+                    productLoadListener.onProductLoadFailed(error.getMessage());
+                    }
+                });
+
+    }
+
+    private void initializeVariables() {
+
+        //cartImageView = findViewById(R.id.cartIv);
+
+        productLoadListener = this;
+        //cartLoadListener = this;
+        coordinatorLayout = findViewById(R.id.coordinator_Layout);
+        shoeCartList = new ArrayList<>();
+        viewModel = new ViewModelProvider(this).get(CartViewModel.class);
+        shoeItemList = new ArrayList<>();
+        recyclerView = findViewById(R.id.recyclerView);
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+
+        adapter = new ProductItemAdapter(this,shoeItemList);
+
+    }
+
+
+
+
+
+    @Override
+    public void onProductLoadSuccess(List<ShoeItem> shoeItemList) {
+        ProductItemAdapter adapter = new ProductItemAdapter(this,shoeItemList);
+        recyclerView.setAdapter(adapter);
+    }
+
+    @Override
+    public void onProductLoadFailed(String message) {
+        Snackbar.make(coordinatorLayout, message, Snackbar.LENGTH_SHORT).show();
+    }
+
+
 
     public void updateNavHeader(){
         navigationView = findViewById(R.id.nav_view);
@@ -151,7 +246,7 @@ public class HomeActivity extends AppCompatActivity implements RopaItemAdapter.S
 
 
     }
-    @Override
+     @Override
     protected void onResume() {
         super.onResume();
 
@@ -163,16 +258,8 @@ public class HomeActivity extends AppCompatActivity implements RopaItemAdapter.S
         });
 
     }
-         /*   ItemList[] mydata = new ItemList[]{
-            new ItemList("Camiseta hombre", R.drawable.camisa1),
-            new ItemList("Ropa para mujer", R.drawable.mujer),
-            new ItemList("Zapatillas", R.drawable.sapatilla),
-            new ItemList("Calcetines", R.drawable.calcetines),
-            new ItemList("Bufandas", R.drawable.bufanda),
-            new ItemList("Camiseta deporte", R.drawable.camiseta5)
 
-    };*/
-        private void setUpList() {
+        /*private void setUpList() {
             shoeItemList.add(new ShoeItem("Nike Revolution", "Camiseta hombre", R.drawable.camisa1, 15));
             shoeItemList.add(new ShoeItem("Nike Flex Run 2021", "Ropa para mujer", R.drawable.mujer, 20));
             shoeItemList.add(new ShoeItem("Court Zoom Vapor", "Zapatillas", R.drawable.sapatilla, 18));
@@ -182,31 +269,11 @@ public class HomeActivity extends AppCompatActivity implements RopaItemAdapter.S
             shoeItemList.add(new ShoeItem("Adidas Questar", "ADIDAS", R.drawable.adidas_questar_shoes, 12));
             shoeItemList.add(new ShoeItem("Adidas Ultraboost", "ADIDAS", R.drawable.adidas_ultraboost, 15));
 
-        }
-
-        private void initializeVariables() {
-
-            //cartImageView = findViewById(R.id.cartIv);
-            coordinatorLayout = findViewById(R.id.coordinator_Layout);
-            shoeCartList = new ArrayList<>();
-            viewModel = new ViewModelProvider(this).get(CartViewModel.class);
-            shoeItemList = new ArrayList<>();
-            recyclerView = findViewById(R.id.recyclerView);
-            recyclerView.setHasFixedSize(true);
-            recyclerView.setLayoutManager(new LinearLayoutManager(this));
-
-            adapter = new RopaItemAdapter(this);
-
-        }
+        }*/
 
 
-/*    recyclerView=findViewById(R.id.recyclerView);
-    ItemAdapter adapter= new ItemAdapter(mydata);
-        recyclerView.setHasFixedSize(true);
-    LinearLayoutManager linear = new LinearLayoutManager(getApplicationContext());
-        linear.setOrientation(LinearLayoutManager.VERTICAL);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        recyclerView.setAdapter(adapter);*/
+
+
 
     public void onCardClicked(ShoeItem shoe) {
         Intent intent = new Intent(HomeActivity.this, DetailedActivity.class);
@@ -221,6 +288,10 @@ public class HomeActivity extends AppCompatActivity implements RopaItemAdapter.S
         shoeCart.setShoeBrandName(shoeItem.getShoeBrandName());
         shoeCart.setShoePrice(shoeItem.getShoePrice());
         shoeCart.setShoeImage(shoeItem.getShoeImage());
+
+       /* Picasso.get().load(getIntent().getStringExtra("eachCartItemIV"))
+                .placeholder(R.drawable.camisa1)
+                .into(shoeImageView);*/
 
         final int[] quantity = {1};
         final int[] id = new int[1];
@@ -239,7 +310,7 @@ public class HomeActivity extends AppCompatActivity implements RopaItemAdapter.S
 
         if (quantity[0] == 1) {
             shoeCart.setQuantity(quantity[0]);
-            shoeCart.setTotalItemPrice(quantity[0] * shoeCart.getShoePrice());
+            shoeCart.setTotalItemPrice(quantity[0] * (shoeCart.getShoePrice()));
             viewModel.insertCartItem(shoeCart);
         } else {
             viewModel.updateQuantity(id[0], quantity[0]);
@@ -247,6 +318,7 @@ public class HomeActivity extends AppCompatActivity implements RopaItemAdapter.S
         }
 
         makeSnackBar("Item Added To Cart");
+
     }
 
     private void makeSnackBar(String msg) {
@@ -313,15 +385,13 @@ public class HomeActivity extends AppCompatActivity implements RopaItemAdapter.S
         }
 
     }
+
+
 }
 
 
 
 
-       /* listView=findViewById(R.id.listview);
-
-        Adaptador adaptador= new Adaptador(HomeActivity.this,ropatitles,imageid);
-        listView.setAdapter(adaptador);*/
 
 
 

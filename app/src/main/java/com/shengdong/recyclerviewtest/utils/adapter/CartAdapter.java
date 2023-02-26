@@ -1,5 +1,6 @@
 package com.shengdong.recyclerviewtest.utils.adapter;
 
+import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,8 +11,10 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.shengdong.R;
 import com.shengdong.recyclerviewtest.utils.model.ShoeCart;
+import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
@@ -19,9 +22,16 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHodler
 
     private CartClickedListeners cartClickedListeners;
     private List<ShoeCart> shoeCartList;
+    private Context context;
 
     public CartAdapter(CartClickedListeners cartClickedListeners) {
         this.cartClickedListeners = cartClickedListeners;
+    }
+
+
+    public CartAdapter(List<ShoeCart> shoeCartList, Context context) {
+        this.shoeCartList = shoeCartList;
+        this.context = context;
     }
 
     public void setShoeCartList(List<ShoeCart> shoeCartList) {
@@ -40,6 +50,12 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHodler
     public void onBindViewHolder(@NonNull CartViewHodler holder, int position) {
 
         ShoeCart shoeCart = shoeCartList.get(position);
+
+
+        Picasso.get().load(shoeCartList.get(position).getImage()).into(holder.shoeImageView);
+        /*Glide.with(context)
+                .load(shoeCartList.get(position).getImage())
+                .into(holder.shoeImageView);*/
         holder.shoeImageView.setImageResource(shoeCart.getShoeImage());
         holder.shoeNameTv.setText(shoeCart.getShoeName());
         holder.shoeBrandNameTv.setText(shoeCart.getShoeBrandName());

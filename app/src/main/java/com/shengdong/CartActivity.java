@@ -3,6 +3,7 @@ package com.shengdong;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -13,10 +14,14 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.shengdong.recyclerviewtest.utils.adapter.CartAdapter;
 import com.shengdong.recyclerviewtest.utils.model.ShoeCart;
+import com.shengdong.recyclerviewtest.utils.model.ShoeItem;
 import com.shengdong.recyclerviewtest.viewmodel.CartViewModel;
+import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class CartActivity extends AppCompatActivity implements CartAdapter.CartClickedListeners {
@@ -28,6 +33,15 @@ public class CartActivity extends AppCompatActivity implements CartAdapter.CartC
     private CardView cardView;
     private CartAdapter cartAdapter;
 
+    private ImageView shoeImageView, imageView;
+    private TextView shoeNameTV, shoeBrandNameTV, shoePriceTV;
+    private FloatingActionButton addToCartBtn;
+    private ShoeItem shoe;
+    private ShoeCart shoeCarts;
+    private CartViewModel viewModel;
+    private List<ShoeCart> shoeCartList;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,6 +50,14 @@ public class CartActivity extends AppCompatActivity implements CartAdapter.CartC
 
         initializeVariables();
 
+       /* Picasso.get().load(getIntent().getStringExtra("eachCartItemIV"))
+                .placeholder(R.drawable.camisa1)
+                .into(shoeImageView);
+
+        shoeNameTV.setText(getIntent().getStringExtra("eachCartItemName"));
+        shoeBrandNameTV.setText(getIntent().getStringExtra("eachCartItemBrandNameTv"));
+        shoePriceTV.setText(String.valueOf(getIntent().getStringExtra("eachCartItemPriceTv")));
+*/
         cartViewModel.getAllCartItems().observe(this, new Observer<List<ShoeCart>>() {
             @Override
             public void onChanged(List<ShoeCart> shoeCarts) {
@@ -61,6 +83,7 @@ public class CartActivity extends AppCompatActivity implements CartAdapter.CartC
     }
 
 
+
     private void initializeVariables() {
 
         cartAdapter = new CartAdapter(this);
@@ -74,6 +97,15 @@ public class CartActivity extends AppCompatActivity implements CartAdapter.CartC
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         recyclerView.setAdapter(cartAdapter);
+
+        shoeCartList = new ArrayList<>();
+        shoeImageView = findViewById(R.id.eachCartItemIV);
+        shoeNameTV = findViewById(R.id.eachCartItemName);
+        shoeBrandNameTV = findViewById(R.id.eachCartItemBrandNameTv);
+        shoePriceTV = findViewById(R.id.eachCartItemPriceTv);
+        //imageView = findViewById(R.id.producto_image_detalle);
+
+
 
 
     }

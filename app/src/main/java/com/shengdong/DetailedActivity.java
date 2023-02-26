@@ -2,6 +2,7 @@ package com.shengdong;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -14,16 +15,18 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.shengdong.recyclerviewtest.utils.model.ShoeCart;
 import com.shengdong.recyclerviewtest.utils.model.ShoeItem;
 import com.shengdong.recyclerviewtest.viewmodel.CartViewModel;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class DetailedActivity extends AppCompatActivity {
 
-    private ImageView shoeImageView;
+    private ImageView shoeImageView, imageView;
     private TextView shoeNameTV, shoeBrandNameTV, shoePriceTV;
     private FloatingActionButton addToCartBtn;
     private ShoeItem shoe;
+    private ShoeCart shoeCarts;
     private CartViewModel viewModel;
     private List<ShoeCart> shoeCartList;
 
@@ -35,6 +38,8 @@ public class DetailedActivity extends AppCompatActivity {
         shoe = getIntent().getParcelableExtra("shoeItem");
         initializeVariables();
 
+
+
         viewModel.getAllCartItems().observe(this, new Observer<List<ShoeCart>>() {
             @Override
             public void onChanged(List<ShoeCart> shoeCarts) {
@@ -42,25 +47,42 @@ public class DetailedActivity extends AppCompatActivity {
             }
         });
 
-        if (shoe != null) {
+        /* if (shoe != null) {
             setDataToWidgets();
-        }
+        }*/
 
-        addToCartBtn.setOnClickListener(new View.OnClickListener() {
+      addToCartBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 insertToRoom();
             }
         });
 
+
+        Picasso.get().load(getIntent().getStringExtra("producto_image_detalle"))
+                .placeholder(R.drawable.camisa1)
+                .into(shoeImageView);
+
+        shoeNameTV.setText(getIntent().getStringExtra("producto_name_detalle"));
+        shoeBrandNameTV.setText(getIntent().getStringExtra("producto_name_descripcion"));
+        shoePriceTV.setText(String.valueOf(getIntent().getStringExtra("producto_price_descripcion")));
+
+
+
     }
 
+
+
     private void insertToRoom(){
+        Intent i = new Intent(this, CartActivity.class);
+        startActivity(i);
+    }
+       /* ShoeItem shoeItem = new ShoeItem();
         ShoeCart shoeCart = new ShoeCart();
-        shoeCart.setShoeName(shoe.getShoeName());
-        shoeCart.setShoeBrandName(shoe.getShoeBrandName());
-        shoeCart.setShoePrice(shoe.getShoePrice());
-        shoeCart.setShoeImage(shoe.getShoeImage());
+        shoeCart.setShoeName(shoeItem.getShoeName());
+        shoeCart.setShoeBrandName(shoeItem.getShoeBrandName());
+        shoeCart.setShoePrice(shoeItem.getShoePrice());
+        shoeCart.setShoeImage(shoeItem.getShoeImage());
 
         final int[] quantity = {1};
         final int[] id = new int[1];
@@ -88,12 +110,17 @@ public class DetailedActivity extends AppCompatActivity {
         startActivity(new Intent(DetailedActivity.this , CartActivity.class));
     }
 
-    private void setDataToWidgets() {
+   /* private void setDataToWidgets() {
         shoeNameTV.setText(shoe.getShoeName());
         shoeBrandNameTV.setText(shoe.getShoeBrandName());
         shoePriceTV.setText(String.valueOf(shoe.getShoePrice()));
-        shoeImageView.setImageResource(shoe.getShoeImage());
-    }
+
+        Picasso.get().load(getIntent().getStringExtra("producto_image_detalle"))
+                .placeholder(R.drawable.camisa1)
+                .into(shoeImageView);
+       // imageView.setImageResource((shoe.getShoeImage()));
+    }*/
+
 
     private void initializeVariables() {
 
@@ -103,6 +130,7 @@ public class DetailedActivity extends AppCompatActivity {
         shoeBrandNameTV = findViewById(R.id.producto_name_descripcion);
         shoePriceTV = findViewById(R.id.producto_price_descripcion);
         addToCartBtn = findViewById(R.id.add_product_cart);
+        //imageView = findViewById(R.id.producto_image_detalle);
 
         viewModel = new ViewModelProvider(this).get(CartViewModel.class);
     }

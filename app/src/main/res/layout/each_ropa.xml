@@ -49,9 +49,8 @@
 
         <ImageView
             android:id="@+id/eachShoeAddToCartBtn"
-            android:layout_width="25dp"
-            android:layout_height="25dp"
-            android:layout_marginTop="0dp"
+            android:layout_width="21dp"
+            android:layout_height="15dp"
             android:layout_marginEnd="8dp"
             android:layout_marginBottom="8dp"
             app:layout_constraintBottom_toBottomOf="parent"

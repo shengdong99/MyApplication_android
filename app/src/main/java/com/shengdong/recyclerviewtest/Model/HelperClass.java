@@ -1,4 +1,4 @@
-package com.shengdong;
+package com.shengdong.recyclerviewtest.Model;
 
 public class HelperClass {
 

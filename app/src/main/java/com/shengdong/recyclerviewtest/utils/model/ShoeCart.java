@@ -9,13 +9,30 @@ public class ShoeCart {
     @PrimaryKey(autoGenerate = true)
     private int id;
 
-    private String shoeName, shoeBrandName;
+    private String shoeName, shoeBrandName, image;
     private int shoeImage;
     private double shoePrice;
 
     private int quantity;
     private double totalItemPrice;
 
+    public ShoeCart() {
+    }
+
+    public ShoeCart(String shoeName, String shoeBrandName, String image, double shoePrice) {
+        this.shoeName = shoeName;
+        this.shoeBrandName = shoeBrandName;
+        this.image = image;
+        this.shoePrice = shoePrice;
+    }
+
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
+    }
 
     public String getShoeName() {
         return shoeName;
