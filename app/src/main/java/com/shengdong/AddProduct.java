@@ -81,8 +81,10 @@ public class AddProduct extends AppCompatActivity {
         AddNewProductButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mTakePhoto.launch("image/*");
+                //mTakePhoto.launch("image/*");
                 ValidateProductData();
+                Intent i = new Intent(AddProduct.this, HomeActivity.class);
+                startActivity(i);
             }
         });
     }

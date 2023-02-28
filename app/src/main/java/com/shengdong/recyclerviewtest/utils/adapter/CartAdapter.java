@@ -51,12 +51,11 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHodler
 
         ShoeCart shoeCart = shoeCartList.get(position);
 
-
-        Picasso.get().load(shoeCartList.get(position).getImage()).into(holder.shoeImageView);
+        //Picasso.get().load(shoeCartList.get(position).getImage()).into(holder.shoeImageView);
         /*Glide.with(context)
                 .load(shoeCartList.get(position).getImage())
                 .into(holder.shoeImageView);*/
-        holder.shoeImageView.setImageResource(shoeCart.getShoeImage());
+        //holder.shoeImageView.setImageResource(shoeCart.getShoeImage());
         holder.shoeNameTv.setText(shoeCart.getShoeName());
         holder.shoeBrandNameTv.setText(shoeCart.getShoeBrandName());
         holder.shoeQuantity.setText(shoeCart.getQuantity() + "");

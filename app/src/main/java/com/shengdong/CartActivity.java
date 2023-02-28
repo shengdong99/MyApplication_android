@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.firebase.database.DataSnapshot;
 import com.shengdong.recyclerviewtest.utils.adapter.CartAdapter;
 import com.shengdong.recyclerviewtest.utils.model.ShoeCart;
 import com.shengdong.recyclerviewtest.utils.model.ShoeItem;
@@ -58,13 +59,19 @@ public class CartActivity extends AppCompatActivity implements CartAdapter.CartC
         shoeBrandNameTV.setText(getIntent().getStringExtra("eachCartItemBrandNameTv"));
         shoePriceTV.setText(String.valueOf(getIntent().getStringExtra("eachCartItemPriceTv")));
 */
+
+
         cartViewModel.getAllCartItems().observe(this, new Observer<List<ShoeCart>>() {
             @Override
             public void onChanged(List<ShoeCart> shoeCarts) {
                 double price = 0;
+
+
+
                 cartAdapter.setShoeCartList(shoeCarts);
                 for (int i=0;i<shoeCarts.size();i++){
                     price = price + shoeCarts.get(i).getTotalItemPrice();
+
                 }
                 totalCartPriceTv.setText(String.valueOf(price));
             }
@@ -82,7 +89,8 @@ public class CartActivity extends AppCompatActivity implements CartAdapter.CartC
         });
     }
 
-
+  /*  public void onDataChange(DataSnapshot dataSnapshot) {
+    }*/
 
     private void initializeVariables() {
 
